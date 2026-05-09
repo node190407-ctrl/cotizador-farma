@@ -6,7 +6,7 @@ const state = {
   incluirImpuestos: true
 };
 
-const XLSX_URL = 'data/inventario.xlsx';
+const XLSX_URL = 'data/Cotizador.xlsx';
 const JSON_URL = 'data/productos.json';
 const PDF_LOGO_URL = 'assets/pharma-clinical-logo.png';
 
