@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cotizador PCS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Allura&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="brand-line">
+          <img src="assets/logo-hero.webp" alt="Pharma Clinical Solution" class="logo-image" />
+          <div class="brand-copy">
+            <span class="eyebrow">Cotizador inteligente</span>
+            <h1>Pharma Clinical Solution</h1>
+            <p>Comprometidos con tu bienestar, eficiencia y confianza en cada solución clínica.</p>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-card"><strong id="statProductos">0</strong><span>productos</span></div>
+          <div class="stat-card"><strong id="statDepartamentos">0</strong><span>departamentos</span></div>
+          <div class="stat-card"><strong id="statExistencias">0</strong><span>piezas en inventario</span></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel catalog-panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">Catálogo</p>
+            <h2>Selecciona productos</h2>
+          </div>
+          <button class="ghost-btn" id="recargarBtn" type="button">Recargar catálogo</button>
+        </div>
+
+        <div class="status-bar" id="statusBar">Cargando catálogo...</div>
+
+        <div class="toolbar">
+          <label class="field grow">
+            <span>Buscar</span>
+            <input type="search" id="busqueda" placeholder="Producto, código o tipo de producto" />
+          </label>
+          <label class="field">
+            <span>Departamento</span>
+            <select id="filtroDepartamento">
+              <option value="">Todos</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Stock</span>
+            <select id="filtroStock">
+              <option value="">Todos</option>
+              <option value="disponible">Con existencia</option>
+              <option value="bajo">Stock bajo</option>
+              <option value="agotado">Agotados</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Orden</span>
+            <select id="orden">
+              <option value="nombre">Nombre A-Z</option>
+              <option value="ventaAsc">Precio venta ↑</option>
+              <option value="ventaDesc">Precio venta ↓</option>
+              <option value="existenciaDesc">Mayor stock</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="table-wrap">
+          <table class="catalog-table">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Producto</th>
+                <th>Departamento</th>
+                <th>Existencia</th>
+                <th>Venta</th>
+                <th>Mayoreo</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="catalogoBody">
+              <tr><td colspan="7" class="loading">Cargando inventario...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <aside class="panel quote-panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">Cotización</p>
+            <h2>Resumen del cliente</h2>
+          </div>
+          <button class="ghost-btn" id="limpiarBtn" type="button">Vaciar</button>
+        </div>
+
+        <div class="client-grid">
+          <label class="field">
+            <span>Cliente</span>
+            <input type="text" id="clienteNombre" placeholder="Nombre del cliente" />
+          </label>
+          <label class="field">
+            <span>Empresa / razón social</span>
+            <input type="text" id="clienteEmpresa" placeholder="Opcional" />
+          </label>
+          <label class="field">
+            <span>Contacto</span>
+            <input type="text" id="clienteContacto" placeholder="Teléfono o correo" />
+          </label>
+          <label class="field">
+            <span>Fecha</span>
+            <input type="date" id="fechaCotizacion" />
+          </label>
+          <label class="field full">
+            <span>Notas</span>
+            <textarea id="notasCotizacion" rows="3" placeholder="Condiciones comerciales, entrega, observaciones..."></textarea>
+          </label>
+        </div>
+
+        <div class="pricing-controls">
+          <div class="price-mode">
+            <span>Modo de precio</span>
+            <div class="toggle-group">
+              <button class="toggle-btn active" data-modo="venta" type="button">Venta</button>
+              <button class="toggle-btn" data-modo="mayoreo" type="button">Mayoreo</button>
+            </div>
+          </div>
+
+          <label class="tax-toggle" for="sinImpuestos">
+            <div>
+              <strong>Cotizar sin impuestos</strong>
+              <small>Úsalo para clientes que no requieren factura.</small>
+            </div>
+            <input type="checkbox" id="sinImpuestos" />
+            <span class="tax-toggle-slider" aria-hidden="true"></span>
+          </label>
+        </div>
+
+        <div class="quote-list" id="cotizacionItems">
+          <div class="empty-state">
+            <h3>Aún no agregas productos</h3>
+            <p>Selecciona elementos del catálogo para generar tu cotización.</p>
+          </div>
+        </div>
+
+        <div class="totals-box">
+          <div><span>Subtotal</span><strong id="subtotal">$0.00</strong></div>
+          <div><span id="ivaLabel">IVA</span><strong id="iva">$0.00</strong></div>
+          <div class="grand-total"><span>Total</span><strong id="total">$0.00</strong></div>
+        </div>
+
+        <div class="actions">
+          <button class="primary-btn" id="imprimirBtn" type="button">Imprimir / Guardar PDF</button>
+          <button class="secondary-btn" id="exportarBtn" type="button">Exportar JSON</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <template id="productoRowTemplate">
+    <tr>
+      <td class="code"></td>
+      <td>
+        <div class="product-name"></div>
+        <div class="product-type"></div>
+      </td>
+      <td class="department"></td>
+      <td class="stock"></td>
+      <td class="price"></td>
+      <td class="wholesale"></td>
+      <td><button class="add-btn" type="button">Agregar</button></td>
+    </tr>
+  </template>
+
+  <template id="itemTemplate">
+    <article class="quote-item">
+      <div class="item-copy">
+        <h3></h3>
+        <p></p>
+      </div>
+      <div class="item-controls">
+        <label>
+          <span>Cantidad</span>
+          <input type="number" min="1" value="1" class="qty-input" />
+        </label>
+        <label>
+          <span>Precio</span>
+          <input type="number" min="0" step="0.01" class="price-input" />
+        </label>
+        <div class="line-total-wrap">
+          <span>Importe</span>
+          <strong class="line-total">$0.00</strong>
+        </div>
+        <button class="remove-btn" type="button">Quitar</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
