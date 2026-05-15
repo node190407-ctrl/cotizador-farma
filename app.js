@@ -95,9 +95,9 @@ async function loadFromJSON(){
   const res = await fetch(JSON_URL, { cache:'no-store' });
   if (!res.ok) throw new Error(`No se pudo abrir ${JSON_URL}: HTTP ${res.status}`);
   const raw = await res.json();
-  return raw.map(normalizeProducto).filter(Boolean);
+  const productos = Array.isArray(raw[0]?.productos) ? raw[0].productos : raw;
+  return productos.map(normalizeProducto).filter(Boolean);
 }
-
 async function loadFromExcel(){
   if (typeof XLSX === 'undefined') throw new Error('La librería XLSX no está disponible.');
   const res = await fetch(XLSX_URL, { cache: 'no-store' });
