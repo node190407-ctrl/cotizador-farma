@@ -8,7 +8,7 @@ const state = {
 
 const XLSX_URL = 'inventario.xlsx';
 const JSON_URL = 'productos.json';
-const PDF_LOGO_URL = 'assets/pharma-clinical-logo.png';
+const PDF_LOGO_URL = 'pharma-clinical-logo.png';
 
 const catalogoBody = document.getElementById('catalogoBody');
 const filtroDepartamento = document.getElementById('filtroDepartamento');
